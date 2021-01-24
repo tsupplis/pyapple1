@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 import Memory
 import PIA6821
@@ -7,11 +7,17 @@ import Processor
 
 import argparse
 import threading
+import os
+
+dir_path = os.path.dirname(os.path.realpath(__file__))
 
 parser = argparse.ArgumentParser(description="Apple 1 Emulator")
 parser.add_argument("-m", "--model",
         help="set model to apple1 (default) or replica1",
         default="apple1")
+parser.add_argument("-l", "--load",
+        help="load program at 0x280",
+        default=None)
 parser.add_argument("-w", "--writerom",
         help="allow writes to ROM (default: false)", 
         type=bool, default=False)
@@ -33,24 +39,45 @@ romsize = 0x100
 
 if args.model == "apple1":
     ramsize = 4 * 1024
-    rompath = "roms/wozmon.bin"
+    rompath = dir_path+"/roms/wozmon.bin"
     rombase = 0xff00
     romsize = 0x100
 
-if args.model == "replica1":
+elif args.model == "replica1":
     ramsize = 32 * 1024
-    rompath = "roms/replica1.bin"
+    rompath = dir_path+"/roms/replica1.bin"
     rombase = 0xe000
     romsize = 0x2000
+elif args.model == "applesoft":
+    ramsize = 32 * 1024
+    rompath = dir_path+"/roms/applesoft.bin"
+    rombase = 0xe000
+    romsize = 0x2000
+else:
+	args.model= "unkown"
 
 if args.ramsize != 0:
     ramsize = args.ramsize * 1024
 
-print ("Ramsize: ", ramsize)
+print ("Apple 1 Simulator");
+print ("Ram Size : ", ramsize)
+print ("Model    : ", args.model)
 
 ram = Memory.RAM(decoder, 0, ramsize) 
 rom = Memory.ROM(decoder, rombase, romsize)
 rom.load(open(rompath, "rb"))
+
+if args.load != None:
+    f=open(args.load,"rb");
+    for i in range(0, os.fstat(f.fileno()).st_size):
+        t = f.read(1)
+        if t == b'':
+            t = 0
+        else:
+            t = ord(t)
+        ram[i+0x280] = t
+
+
 
 terminal = Terminal.Terminal(processor)
 
