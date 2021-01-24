@@ -11,13 +11,15 @@ It requires the py65.  It can either be on the system path or in the current dir
 At present, it emulates 
 - an Apple 1 with 4 KB of RAM at 0 and the Woz monitor at 0xFF00, or 
 - a Replica 1 with 32 KB of RAM, 8 KB of ROM including Integer BASIC at E000, Krusader assembler at F000 and the Woz monitor at FF00 or
-- a Replica 1 with 32 KB of RAM, 8 KB of ROM including Applesoft BASIC at E000
+- a Replica 1 with 32 KB of RAM, 8 KB of ROM including Applesoft BASIC at E000 (https://cowgod.org/replica1/applesoft/)
 
 To run:
 
     python3 Apple1.py -m replica1
 
 Control-E is reset, control-C exits.  \ is the Woz monitor reset prompt.  You can read more about the Woz monitor at http://sbprojects.com/projects/apple1/wozmon.php
+
+\0x127 and Control-H emit an underscoer character
 
 Example where the first 32 bytes of Integer Basic are first dumped, Integer BASIC is then run, a small BASIC program is entered and then executed.
 

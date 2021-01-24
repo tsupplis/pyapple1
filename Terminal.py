@@ -42,6 +42,8 @@ class Terminal(threading.Thread):
         while (1):
             c = Getch.getch()
             self.kbdready = True
+            if c == chr(0x08):
+                c='_';
             if c == chr(0x7f):
                 c='_';
             if c == chr(0x05):      # ^E
